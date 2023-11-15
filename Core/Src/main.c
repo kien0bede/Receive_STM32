@@ -29,8 +29,8 @@ int ret;
 char buffer[16];
 char strCopy[16];
 
-uint8_t Temp;
-uint8_t Humi;
+uint8_t temp;
+uint8_t humi;
 uint16_t Flame,MQ2;
 uint8_t ON,ONMQ2;
 
@@ -72,16 +72,6 @@ int main(void)
 
   while (1)
   {
-	  buffer[0]= (uint8_t)Flame ;
-	  buffer[1]= (uint8_t)(Flame>>8);
-	  buffer[2]= (uint8_t)ON;
-	  buffer[3]= (uint8_t)MQ2;
-	  buffer[4]= (uint8_t)(MQ2>>8);
-	  buffer[5]= (uint8_t)ONMQ2;
-	  buffer[6]= (uint8_t)Temp;
-	  buffer[7]= (uint8_t)Humi;
-
-
 	  if (master == 1) {
 
 		HAL_Delay(1000);
@@ -117,12 +107,14 @@ int main(void)
 				sprintf(strCopy,"MQ2 Value: %d", MQ2);
 				SSD1306_Puts (strCopy, &Font_7x10, 1);
 
+				humi = ((uint8_t)buffer[7]);
 				SSD1306_GotoXY (0,40);
-				sprintf(strCopy,"Humi: %d", Humi);
+				sprintf(strCopy,"Humi: %d", humi);
 				SSD1306_Puts (strCopy, &Font_7x10, 1);
 
+				temp = ((uint8_t)buffer[6]);
 				SSD1306_GotoXY (0,50);
-				sprintf(strCopy,"Temp: %d", Temp);
+				sprintf(strCopy,"Temp: %d", temp);
 				SSD1306_Puts (strCopy, &Font_7x10, 1);
 				SSD1306_UpdateScreen();
 
