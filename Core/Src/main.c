@@ -109,11 +109,18 @@ int main(void)
 				SSD1306_GotoXY (0,0);
 				sprintf(strCopy,"Flame Value: %d", Flame);
 				SSD1306_Puts (strCopy, &Font_7x10, 1);
-				SSD1306_UpdateScreen();
 
 				MQ2 = ((uint16_t)buffer[4]<<8 | (uint16_t)buffer[3]);
 				SSD1306_GotoXY (0,10);
 				sprintf(strCopy,"MQ2 Value: %d", MQ2);
+				SSD1306_Puts (strCopy, &Font_7x10, 1);
+
+				SSD1306_GotoXY (0,40);
+				sprintf(strCopy,"Hum: %d", Humi);
+				SSD1306_Puts (strCopy, &Font_7x10, 1);
+
+				SSD1306_GotoXY (0,50);
+				sprintf(strCopy,"Temp: %d", Temp);
 				SSD1306_Puts (strCopy, &Font_7x10, 1);
 				SSD1306_UpdateScreen();
 
@@ -144,16 +151,6 @@ int main(void)
 					SSD1306_Puts ("Có LỬA", &Font_7x10, 1);
 					SSD1306_UpdateScreen();
 				}
-
-				SSD1306_GotoXY (0,40);
-				sprintf(strCopy,"Hum: %d", Humi);
-				SSD1306_Puts (strCopy, &Font_7x10, 1);
-				SSD1306_UpdateScreen();
-
-				SSD1306_GotoXY (0,50);
-				sprintf(strCopy,"Temp: %d", Temp);
-				SSD1306_Puts (strCopy, &Font_7x10, 1);
-				SSD1306_UpdateScreen();
 
 				HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 				HAL_Delay(500);
