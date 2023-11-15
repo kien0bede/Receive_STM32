@@ -24,7 +24,7 @@ static void MX_USART1_UART_Init(void);
 SX1278_hw_t SX1278_hw;
 SX1278_t SX1278;
 
-int master = 1;
+int master = 0;
 int ret;
 char buffer[16];
 char strCopy[16];
@@ -76,9 +76,10 @@ int main(void)
 	  buffer[2]= (uint8_t)ON;
 	  buffer[3]= (uint8_t)MQ2;
 	  buffer[4]= (uint8_t)(MQ2>>8);
-	  buffer[5]= (uint8_t)Temp;
-	  buffer[6]= (uint8_t)Humi;
-	  buffer[7]= (uint8_t)ONMQ2;
+	  buffer[5]= (uint8_t)ONMQ2;
+	  buffer[6]= (uint8_t)Temp;
+	  buffer[7]= (uint8_t)Humi;
+
 
 	  if (master == 1) {
 
@@ -116,7 +117,7 @@ int main(void)
 				SSD1306_Puts (strCopy, &Font_7x10, 1);
 
 				SSD1306_GotoXY (0,40);
-				sprintf(strCopy,"Hum: %d", Humi);
+				sprintf(strCopy,"Humi: %d", Humi);
 				SSD1306_Puts (strCopy, &Font_7x10, 1);
 
 				SSD1306_GotoXY (0,50);
@@ -124,17 +125,17 @@ int main(void)
 				SSD1306_Puts (strCopy, &Font_7x10, 1);
 				SSD1306_UpdateScreen();
 
-				if(buffer[7]==0){
+				if(buffer[5]==0){
 					HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
 					HAL_Delay(1000);
 					HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
 					HAL_Delay(10);
 					SSD1306_GotoXY (0,20);
-					SSD1306_Puts ("An toàn", &Font_7x10, 1);
+					SSD1306_Puts ("GAS", &Font_7x10, 1);
 					SSD1306_UpdateScreen();
 				} else{
 					SSD1306_GotoXY (0,20);
-					SSD1306_Puts ("Có GAS", &Font_7x10, 1);
+					SSD1306_Puts ("Safe", &Font_7x10, 1);
 					SSD1306_UpdateScreen();
 				}
 
@@ -144,11 +145,11 @@ int main(void)
 					HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
 					HAL_Delay(10);
 					SSD1306_GotoXY (0,30);
-					SSD1306_Puts ("An toàn", &Font_7x10, 1);
+					SSD1306_Puts ("Fire", &Font_7x10, 1);
 					SSD1306_UpdateScreen();
 				} else{
 					SSD1306_GotoXY (0,30);
-					SSD1306_Puts ("Có LỬA", &Font_7x10, 1);
+					SSD1306_Puts ("Safe", &Font_7x10, 1);
 					SSD1306_UpdateScreen();
 				}
 
