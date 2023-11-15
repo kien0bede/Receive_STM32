@@ -1668,7 +1668,7 @@ __weak int SX1278_hw_GetDIO0(SX1278_hw_t *hw) {
 	...
 
 08000ce0 <main>:
-uint8_t Temp,Humi;
+uint8_t Humi;
 uint16_t Flame,MQ2;
 uint8_t ON,ONMQ2;
 

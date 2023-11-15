@@ -29,7 +29,8 @@ int ret;
 char buffer[16];
 char strCopy[16];
 
-uint8_t Temp,Humi;
+uint8_t Temp;
+uint8_t Humi;
 uint16_t Flame,MQ2;
 uint8_t ON,ONMQ2;
 
