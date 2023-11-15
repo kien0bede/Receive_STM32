@@ -24,13 +24,14 @@ static void MX_USART1_UART_Init(void);
 SX1278_hw_t SX1278_hw;
 SX1278_t SX1278;
 
-int master = 0;
+int master = 1;
 int ret;
 char buffer[16];
 char strCopy[16];
 
+uint8_t Temp,Humi;
 uint16_t Flame,MQ2;
-uint8_t ON;
+uint8_t ON,ONMQ2;
 
 int main(void)
 {
@@ -75,6 +76,9 @@ int main(void)
 	  buffer[2]= (uint8_t)ON;
 	  buffer[3]= (uint8_t)MQ2;
 	  buffer[4]= (uint8_t)(MQ2>>8);
+	  buffer[5]= (uint8_t)Temp;
+	  buffer[6]= (uint8_t)Humi;
+	  buffer[7]= (uint8_t)ONMQ2;
 
 	  if (master == 1) {
 
@@ -103,9 +107,29 @@ int main(void)
 
 				Flame = ((uint16_t)buffer[1]<<8 | (uint16_t)buffer[0]);
 				SSD1306_GotoXY (0,0);
-				sprintf(strCopy,"%d", Flame);
-				SSD1306_Puts (strCopy, &Font_11x18, 1);
+				sprintf(strCopy,"Flame Value: %d", Flame);
+				SSD1306_Puts (strCopy, &Font_7x10, 1);
 				SSD1306_UpdateScreen();
+
+				MQ2 = ((uint16_t)buffer[4]<<8 | (uint16_t)buffer[3]);
+				SSD1306_GotoXY (0,10);
+				sprintf(strCopy,"MQ2 Value: %d", MQ2);
+				SSD1306_Puts (strCopy, &Font_7x10, 1);
+				SSD1306_UpdateScreen();
+
+				if(buffer[7]==0){
+					HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+					HAL_Delay(1000);
+					HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
+					HAL_Delay(10);
+					SSD1306_GotoXY (0,20);
+					SSD1306_Puts ("An toàn", &Font_7x10, 1);
+					SSD1306_UpdateScreen();
+				} else{
+					SSD1306_GotoXY (0,20);
+					SSD1306_Puts ("Có GAS", &Font_7x10, 1);
+					SSD1306_UpdateScreen();
+				}
 
 				if(buffer[2]==0){
 					HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
@@ -113,15 +137,24 @@ int main(void)
 					HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
 					HAL_Delay(10);
 					SSD1306_GotoXY (0,30);
-					SSD1306_Puts ("Fireeee", &Font_11x18, 1);
+					SSD1306_Puts ("An toàn", &Font_7x10, 1);
 					SSD1306_UpdateScreen();
 				} else{
 					SSD1306_GotoXY (0,30);
-					SSD1306_Puts ("FreeFireeee", &Font_11x18, 1);
+					SSD1306_Puts ("Có LỬA", &Font_7x10, 1);
 					SSD1306_UpdateScreen();
 				}
 
-				MQ2 = ((uint16_t)buffer[3]<<8 | (uint16_t)buffer[2]);
+				SSD1306_GotoXY (0,40);
+				sprintf(strCopy,"Hum: %d", Humi);
+				SSD1306_Puts (strCopy, &Font_7x10, 1);
+				SSD1306_UpdateScreen();
+
+				SSD1306_GotoXY (0,50);
+				sprintf(strCopy,"Temp: %d", Temp);
+				SSD1306_Puts (strCopy, &Font_7x10, 1);
+				SSD1306_UpdateScreen();
+
 				HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 				HAL_Delay(500);
 				HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
